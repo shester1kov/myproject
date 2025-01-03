@@ -1,0 +1,1382 @@
+definitions:
+  models.Category:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+    type: object
+  models.CountProdutsResponse:
+    properties:
+      count:
+        type: integer
+      manufacturer:
+        type: string
+    type: object
+  models.CreateOrderRequest:
+    properties:
+      products:
+        description: Опциональный список продуктов
+        items:
+          $ref: '#/definitions/models.ProductInOrder'
+        type: array
+    type: object
+  models.ErrorResponse:
+    properties:
+      code:
+        description: Код ошибки, например, 400 или 500
+        type: integer
+      message:
+        description: Сообщение об ошибке
+        type: string
+    type: object
+  models.LoginCredentials:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.Order:
+    properties:
+      order_id:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/models.OrderProduct'
+        type: array
+      user_id:
+        type: integer
+    type: object
+  models.OrderProduct:
+    properties:
+      order_id:
+        type: integer
+      product:
+        $ref: '#/definitions/models.Product'
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  models.Product:
+    properties:
+      category_id:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      manufacturer:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  models.ProductInOrder:
+    properties:
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  models.ProductResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  models.RegisterCredentials:
+    properties:
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  models.TokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  models.UpdatePasswordRequest:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+    type: object
+  models.UpdateProductQuantityRequest:
+    properties:
+      quantity:
+        type: integer
+    type: object
+  models.UpdateUserRoleRequest:
+    properties:
+      role:
+        type: string
+    type: object
+  models.UpdateUsernameRequest:
+    properties:
+      username:
+        type: string
+    type: object
+  models.User:
+    properties:
+      id:
+        type: integer
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  models.UserInfoResponse:
+    properties:
+      name:
+        type: string
+      role:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API для управления продуктами, категориями и пользователями.
+  title: Sports Nutrition API
+  version: "1.0"
+paths:
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список категорий с предзагрузкой связанных продуктов,
+        ограничивая время выполнения запроса до 2 секунд.
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список категорий с предзагруженными продуктами
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+        "408":
+          description: Тайм-аут запроса
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение списка категорий с тайм-аутом
+      tags:
+      - categories
+    post:
+      consumes:
+      - application/json
+      description: Создает новую категорию в базе данных на основе переданных данных.
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Данные категории
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Созданная категория
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Некорректные данные
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Создание новой категории
+      tags:
+      - categories
+  /categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет категорию по переданному ID
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Идентификатор категории
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Категория успешно удалена
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Категория не найдена
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Удаление категории
+      tags:
+      - categories
+    get:
+      consumes:
+      - application/json
+      description: Возвращает информацию о категории на основе переданного идентификатора.
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Идентификатор категории
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация о категории
+          schema:
+            $ref: '#/definitions/models.Category'
+        "404":
+          description: Категория не найдена
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение категории по ID
+      tags:
+      - categories
+    put:
+      consumes:
+      - application/json
+      description: Обновляет категорию с переданными данными на основе ID
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Идентификатор категории
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные категории
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Категория успешно обновлена
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Категория не найдена
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Обновление категории
+      tags:
+      - categories
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Эндпоинт для авторизации пользователя. При успешной авторизации
+        возвращает JWT-токен.
+      parameters:
+      - description: Учетные данные пользователя
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginCredentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Возвращает jwt-токен
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Некорректный пароль
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Невозможно создать токен
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Авторизация пользователя
+      tags:
+      - auth
+  /orders:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список заказов, связанных с пользователем, включая информацию
+        о продуктах в заказах
+      parameters:
+      - description: Токен доступа пользователя (JWT)
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список заказов с продуктами
+          schema:
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение списка заказов пользователя
+      tags:
+      - orders
+    post:
+      consumes:
+      - application/json
+      description: Создает новый заказ и связывает с ним продукты. Если продукты не
+        указаны, заказ будет создан без них.
+      parameters:
+      - description: JWT токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Данные для создания заказа
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Заказ успешно создан
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректные данные запроса или продукт не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Создание нового заказа
+      tags:
+      - orders
+  /orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет указанный заказ текущего пользователя вместе с привязанными
+        продуктами.
+      parameters:
+      - description: Токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное удаление заказа
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Заказ не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка на сервере
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Удаление заказа
+      tags:
+      - orders
+    get:
+      consumes:
+      - application/json
+      description: Возвращает данные заказа, включая связанные продукты, если заказ
+        принадлежит авторизованному пользователю
+      parameters:
+      - description: Токен доступа пользователя (JWT)
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Идентификатор заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация о заказе с продуктами
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Заказ не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение информации о заказе по идентификатору
+      tags:
+      - orders
+  /orders/{id}/products:
+    post:
+      consumes:
+      - application/json
+      description: Добавляет продукт в заказ текущего пользователя. Если продукт уже
+        существует в заказе, его количество увеличивается.
+      parameters:
+      - description: Токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Продукт для добавления в заказ
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductInOrder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное добавление продукта
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Заказ не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка на сервере
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Добавление продукта в заказ
+      tags:
+      - orders
+  /orders/{id}/products/{product_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет указанный продукт из заказа текущего пользователя.
+      parameters:
+      - description: Токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ID продукта для удаления
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное удаление продукта
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Продукт или заказ не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка на сервере
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Удаление продукта из заказа
+      tags:
+      - orders
+    patch:
+      consumes:
+      - application/json
+      description: Обновляет количество указанного продукта в заказе текущего пользователя.
+      parameters:
+      - description: Токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ID продукта
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      - description: Новое количество продукта
+        in: body
+        name: quantity
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateProductQuantityRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное обновление количества продукта
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Продукт или заказ не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка на сервере
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Обновление количества продукта в заказе
+      tags:
+      - orders
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Получает список продуктов с применением фильтров, сортировки и
+        пагинации с тайм-аутом в 2 секунды
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - default: 1
+        description: Номер страницы
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Количество элементов на странице
+        in: query
+        name: limit
+        type: integer
+      - default: id
+        description: Поле для сортировки
+        in: query
+        name: sort
+        type: string
+      - default: asc
+        description: Направление сортировки
+        in: query
+        name: order
+        type: string
+      - description: Название продукта
+        in: query
+        name: name
+        type: string
+      - description: ID категории
+        in: query
+        name: category_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный запрос
+          schema:
+            $ref: '#/definitions/models.ProductResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Продукты не найдены
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "408":
+          description: Тайм-аут запроса
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение списка продуктов с тайм-аутом
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Создает новый продукт с указанными параметрами
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Данные продукта
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Успешное создание
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Создание нового продукта
+      tags:
+      - products
+  /products/{id}:
+    delete:
+      description: Удаляет продукт по указанному ID
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID продукта
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное удаление продукта
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Продукт не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Удаление продукта
+      tags:
+      - products
+    get:
+      description: Получает информацию о продукте по уникальному идентификатору
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID продукта
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный запрос
+          schema:
+            $ref: '#/definitions/models.Product'
+        "404":
+          description: Продукт не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение продукта по ID
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные продукта по указанному ID
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID продукта
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные продукта
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное обновление
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Продукт не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Обновление продукта
+      tags:
+      - products
+  /products/count-by-manufacturer:
+    get:
+      consumes:
+      - application/json
+      description: Выполняет агрегацию, подсчитывая количество продуктов, сгруппированных
+        по производителям.
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Результаты агрегации с производителями и их количеством
+          schema:
+            items:
+              $ref: '#/definitions/models.CountProdutsResponse'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Подсчет количества продуктов по производителям
+      tags:
+      - products
+  /products/manufacturer:
+    put:
+      consumes:
+      - application/json
+      description: Обновляет поле "manufacturer" у всех продуктов в базе данных на
+        указанное значение.
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Новое значение для производителя
+        in: query
+        name: manufacturer
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное обновление
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера или транзакции
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Массовое обновление производителя продуктов
+      tags:
+      - products
+  /products/price-range:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список продуктов, цены которых находятся в заданном
+        диапазоне
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Минимальная цена
+        in: query
+        name: minPrice
+        required: true
+        type: number
+      - description: Максимальная цена
+        in: query
+        name: maxPrice
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список продуктов в заданном диапазоне цен
+          schema:
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
+        "400":
+          description: Некорректные значения цен
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Продукты не найдены в указанном диапазоне
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение продуктов по диапазону цен
+      tags:
+      - products
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      description: Эндпоинт для обновления JWT токена. Генерирует новый токен, если
+        исходный почти истек.
+      parameters:
+      - description: токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: новый JWT токен
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Токен еще не истек
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Пользователь не авторизирован
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Невозможно создать токен
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Обновление токена
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Эндпоинт для регистрации нового пользователя. Возвращает сообщение
+        об успешной регистрации.
+      parameters:
+      - description: 'Учетные данные пользователя (username, password, optional: role)'
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterCredentials'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Пользователь успешно зарегистрирован
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "409":
+          description: Пользователь уже существует
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Невозможно зарегистрировать пользователя
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Регистрация пользователя
+      tags:
+      - auth
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает данные всех пользователей.
+      parameters:
+      - description: Токен авторизации
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список пользователей
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех пользователей
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Позволяет администратору удалить только пользователя с ролью "user"
+      parameters:
+      - description: Токен авторизации
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Пользователь успешно удален
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректные данные запроса или удаление невозможно
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Удаление пользователя с ролью "user"
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Возвращает данные конкретного пользователя по его ID.
+      parameters:
+      - description: Токен авторизации
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Данные пользователя
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Получение данных пользователя по идентификатору
+      tags:
+      - users
+  /users/{id}/role:
+    patch:
+      consumes:
+      - application/json
+      description: Позволяет администратору изменить роль пользователя только с "user"
+        на "admin"
+      parameters:
+      - description: Токен авторизации
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные для обновления роли
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateUserRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Роль пользователя обновлена на администратора
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректные данные запроса или обновление роли невозможно
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Обновление роли пользователя на администратора
+      tags:
+      - users
+  /users/me:
+    delete:
+      consumes:
+      - application/json
+      description: Позволяет пользователю удалить свою учетную запись. Администраторы
+        не могут удалять себя.
+      parameters:
+      - description: Токен авторизации
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Учетная запись успешно удалена
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "401":
+          description: Пользователь не авторизован
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Администратор не может удалить себя
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Удаление своей учетной записи
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Получает информацию о текущем пользователе, включая его имя и роль.
+        Пароль в ответе не передается.
+      parameters:
+      - description: Токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный запрос. Информация о пользователе
+          schema:
+            $ref: '#/definitions/models.UserInfoResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение информации о пользователе
+      tags:
+      - users
+  /users/me/password:
+    patch:
+      consumes:
+      - application/json
+      description: Позволяет авторизованному пользователю изменить свой пароль, требуется
+        указать старый и новый пароли
+      parameters:
+      - description: Токен авторизации
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Данные для обновления пароля
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Пароль успешно обновлен
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректные данные запроса
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Пользователь не авторизован или старый пароль указан неверно
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Обновление пароля пользователя
+      tags:
+      - users
+  /users/me/username:
+    patch:
+      consumes:
+      - application/json
+      description: Позволяет авторизованному пользователю обновить свое имя
+      parameters:
+      - description: Токен авторизации
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Данные для обновления имени пользователя
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Имя пользователя успешно обновлено
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректные данные запроса
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Пользователь не авторизован
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "409":
+          description: Имя пользователя уже занято
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Обновление имени пользователя
+      tags:
+      - users
+swagger: "2.0"
