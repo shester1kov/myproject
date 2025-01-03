@@ -289,7 +289,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.LoginCredentials"
+                            "$ref": "#/definitions/models.Credentials"
                         }
                     }
                 ],
@@ -1307,7 +1307,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.RegisterCredentials"
+                            "$ref": "#/definitions/models.Credentials"
                         }
                     }
                 ],
@@ -1859,6 +1859,17 @@
                 }
             }
         },
+        "models.Credentials": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -1868,17 +1879,6 @@
                 },
                 "message": {
                     "description": "Сообщение об ошибке",
-                    "type": "string"
-                }
-            }
-        },
-        "models.LoginCredentials": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }
@@ -1976,20 +1976,6 @@
                 },
                 "total": {
                     "type": "integer"
-                }
-            }
-        },
-        "models.RegisterCredentials": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
                 }
             }
         },

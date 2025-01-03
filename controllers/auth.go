@@ -17,7 +17,7 @@ import (
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        credentials body models.LoginCredentials true "Учетные данные пользователя"
+// @Param        credentials body models.Credentials true "Учетные данные пользователя"
 // @Success      200 {object} models.TokenResponse "Возвращает jwt-токен"
 // @Failure      400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure      401 {object} models.ErrorResponse "Некорректное имя пользователя"
@@ -61,7 +61,7 @@ func Login(c *gin.Context) {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        credentials body models.RegisterCredentials true "Учетные данные пользователя (username, password, optional: role)"
+// @Param        credentials body models.Credentials true "Учетные данные пользователя (username, password, optional: role)"
 // @Success      201 {object} models.MessageResponse "Пользователь успешно зарегистрирован"
 // @Failure      400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure      409 {object} models.ErrorResponse "Пользователь уже существует"

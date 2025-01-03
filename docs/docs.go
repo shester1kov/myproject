@@ -297,7 +297,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.LoginCredentials"
+                            "$ref": "#/definitions/models.Credentials"
                         }
                     }
                 ],
@@ -1315,7 +1315,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.RegisterCredentials"
+                            "$ref": "#/definitions/models.Credentials"
                         }
                     }
                 ],
@@ -1867,6 +1867,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Credentials": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -1876,17 +1887,6 @@ const docTemplate = `{
                 },
                 "message": {
                     "description": "Сообщение об ошибке",
-                    "type": "string"
-                }
-            }
-        },
-        "models.LoginCredentials": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }
@@ -1984,20 +1984,6 @@ const docTemplate = `{
                 },
                 "total": {
                     "type": "integer"
-                }
-            }
-        },
-        "models.RegisterCredentials": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
                 }
             }
         },

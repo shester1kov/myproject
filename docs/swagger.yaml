@@ -25,6 +25,13 @@ definitions:
           $ref: '#/definitions/models.ProductInOrder'
         type: array
     type: object
+  models.Credentials:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   models.ErrorResponse:
     properties:
       code:
@@ -32,13 +39,6 @@ definitions:
         type: integer
       message:
         description: Сообщение об ошибке
-        type: string
-    type: object
-  models.LoginCredentials:
-    properties:
-      password:
-        type: string
-      username:
         type: string
     type: object
   models.MessageResponse:
@@ -102,15 +102,6 @@ definitions:
         type: integer
       total:
         type: integer
-    type: object
-  models.RegisterCredentials:
-    properties:
-      password:
-        type: string
-      role:
-        type: string
-      username:
-        type: string
     type: object
   models.TokenResponse:
     properties:
@@ -351,7 +342,7 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/models.LoginCredentials'
+          $ref: '#/definitions/models.Credentials'
       produces:
       - application/json
       responses:
@@ -1041,7 +1032,7 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/models.RegisterCredentials'
+          $ref: '#/definitions/models.Credentials'
       produces:
       - application/json
       responses:
