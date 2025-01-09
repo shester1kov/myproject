@@ -68,6 +68,12 @@ func CreateOrder(c *gin.Context) {
 				return
 			}
 
+			if p.Quantity < 1 {
+				tx.Rollback()
+				utils.HandleError(c, http.StatusBadRequest, "Quantity must be greater then zero")
+				return
+			}
+
 			orderProduct := models.OrderProduct{
 				OrderID:   order.ID,
 				ProductID: p.ProductID,
@@ -82,7 +88,7 @@ func CreateOrder(c *gin.Context) {
 	}
 
 	if err := tx.Commit().Error; err != nil {
-		utils.HandleError(c, http.StatusInternalServerError, "Error committing transaction")
+		utils.HandleError(c, http.StatusInternalServerError, "Error committing transaction") //?
 		return
 	}
 
@@ -190,6 +196,11 @@ func AddProductToOrder(c *gin.Context) {
         utils.HandleError(c, http.StatusBadRequest, "Invalid request data")
         return
     }
+
+	if request.Quantity < 1 {
+		utils.HandleError(c, http.StatusBadRequest, "Quantity must be greater then zero")
+		return
+	}
 
     // Получаем user_id из контекста
     userID, exists := c.Get("user_id")
