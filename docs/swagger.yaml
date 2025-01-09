@@ -25,6 +25,13 @@ definitions:
           $ref: '#/definitions/models.ProductInOrder'
         type: array
     type: object
+  models.CreateReviewRequest:
+    properties:
+      rating:
+        type: integer
+      review_text:
+        type: string
+    type: object
   models.Credentials:
     properties:
       password:
@@ -54,6 +61,8 @@ definitions:
         items:
           $ref: '#/definitions/models.OrderProduct'
         type: array
+      user:
+        $ref: '#/definitions/models.User'
       user_id:
         type: integer
     type: object
@@ -66,6 +75,19 @@ definitions:
       product_id:
         type: integer
       quantity:
+        type: integer
+    type: object
+  models.OrderResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
         type: integer
     type: object
   models.Product:
@@ -81,6 +103,8 @@ definitions:
       name:
         type: string
       price:
+        type: number
+      rating:
         type: number
     type: object
   models.ProductInOrder:
@@ -154,6 +178,57 @@ info:
   title: Sports Nutrition API
   version: "1.0"
 paths:
+  /admin/orders:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список заказов, включая информацию о продуктах в заказах
+      parameters:
+      - description: Токен доступа пользователя (JWT)
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - default: 1
+        description: Номер страницы
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Количество элементов на странице
+        in: query
+        name: limit
+        type: integer
+      - default: id
+        description: Поле для сортировки
+        in: query
+        name: sort
+        type: string
+      - default: asc
+        description: Направление сортировки
+        in: query
+        name: order
+        type: string
+      - description: ID пользователя
+        in: query
+        name: user_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список заказов с продуктами
+          schema:
+            items:
+              $ref: '#/definitions/models.OrderResponse'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получение списка всех заказов
+      tags:
+      - orders
   /categories:
     get:
       consumes:
@@ -875,6 +950,52 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Обновление продукта
+      tags:
+      - products
+  /products/{id}/reviews:
+    post:
+      consumes:
+      - application/json
+      description: Создает новый отзыв.
+      parameters:
+      - description: JWT токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID продукта
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Данные для создания отзыва
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateReviewRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Отзыв успешно создан
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректные данные запроса
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Создание нового отзыва
       tags:
       - products
   /products/count-by-manufacturer:

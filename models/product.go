@@ -7,6 +7,7 @@ type Product struct {
 	CategoryID   int     `json:"category_id"`
 	Price        float64 `json:"price"`
 	Manufacturer string  `json:"manufacturer"`
+	Rating       float64 `json:"rating" grom:"default:0.0"`
 }
 
 type ProductInOrder struct {

@@ -2,7 +2,14 @@ package models
 
 type ProductResponse struct {
 	Data  []Product `json:"data"`
-	Total int       `json:"total"`
+	Total int64       `json:"total"`
+	Page  int       `json:"page"`
+	Limit int       `json:"limit"`
+}
+
+type OrderResponse struct {
+	Data  []Order `json:"data"`
+	Total int64       `json:"total"`
 	Page  int       `json:"page"`
 	Limit int       `json:"limit"`
 }

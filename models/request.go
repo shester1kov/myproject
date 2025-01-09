@@ -5,7 +5,7 @@ type CreateOrderRequest struct {
 }
 
 type UpdateProductQuantityRequest struct {
-	Quantity  int `json:"quantity"`
+	Quantity int `json:"quantity"`
 }
 
 type UpdateUsernameRequest struct {
@@ -19,4 +19,9 @@ type UpdatePasswordRequest struct {
 
 type UpdateUserRoleRequest struct {
 	Role string `json:"role"`
+}
+
+type CreateReviewRequest struct {
+	ReviewText string `json:"review_text"`
+	Rating     int    `json:"rating"`
 }

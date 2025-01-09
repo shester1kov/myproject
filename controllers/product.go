@@ -203,7 +203,7 @@ func GetProductsWithTimeout(c *gin.Context) {
 	// Возвращаем результат
 	c.JSON(http.StatusOK, models.ProductResponse{
 		Data:  products,
-		Total: int(total),
+		Total: total,
 		Page:  pageInt,
 		Limit: limitInt,
 	})

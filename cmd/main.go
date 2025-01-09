@@ -35,6 +35,7 @@ func main() {
 		protected.POST("/products", middlewares.RoleMiddleware("admin"), controllers.CreateProduct)
 		protected.PUT("/products/:id", middlewares.RoleMiddleware("admin"), controllers.UpdateProduct)
 		protected.DELETE("/products/:id", middlewares.RoleMiddleware("admin"), controllers.DeleteProduct)
+		protected.POST("/products/:id/reviews", controllers.CreateReview)
 
 		protected.GET("/categories", controllers.GetCategoriesWithTimeout)
 		protected.GET("/categories/:id", controllers.GetCategoryByID)
@@ -49,6 +50,7 @@ func main() {
 		protected.PATCH("orders/:id/products/:product_id", controllers.UpdateProductQuantity)
 		protected.DELETE("/orders/:id/products/:product_id", controllers.DeleteProductFromOrder)
 		protected.DELETE("/orders/:id", controllers.DeleteOrder)
+		protected.GET("/admin/orders", middlewares.RoleMiddleware("admin"), controllers.GetAllOrders)
 
 		protected.GET("users/me", controllers.GetUserInfo)
 		protected.DELETE("users/me", controllers.DeleteSelf)
