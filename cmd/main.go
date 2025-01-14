@@ -10,9 +10,36 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// @title Sports Nutrition API
-// @version 1.0
-// @description API для управления продуктами, категориями и пользователями.
+// @title           Sports Nutrition Store API
+// @version         1.0
+// @description     API для интернет-магазина спортивного питания. Содержит функционал для управления пользователями, продуктами, заказами и отзывами.
+// @termsOfService  http://example.com/terms/
+
+// @contact.name   Support Team
+// @contact.url    http://example.com/support
+// @contact.email  support@example.com
+
+// @license.name  MIT License
+// @license.url   https://opensource.org/licenses/MIT
+
+// @host      localhost:8080
+// @BasePath  /
+//
+// @tag.name auth
+// @tag.description Регистрация и авторизация
+//
+// @tag.name users
+// @tag.description Операции, связанные с пользователями
+//
+// @tag.name products
+// @tag.description Управление продуктами и отзывами
+//
+// @tag.name orders
+// @tag.description Работа с заказами пользователей
+//
+// @tag.name categories
+// @tag.description Управление категориями
+
 func main() {
 	services.InitDB()
 	router := gin.Default()

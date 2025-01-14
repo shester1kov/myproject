@@ -6,6 +6,6 @@ type Review struct {
 	Rating     int     `json:"rating"`
 	UserID     int     `json:"user_id" gorm:"foreignKey:UserID"`
 	ProductID  int     `json:"product_id" gorm:"foreignKey:ProductID"`
-	Product    Product `json:"product" gorm:"foreignKey:ProductID"`
-	User       User    `json:"user" gorm:"foreignKey:UserID`
+	Product    Product `json:"product" gorm:"foreignKey:ProductID" swaggerignore:"true"`
+	User       User    `json:"user" gorm:"foreignKey:UserID" swaggerignore:"true"`
 }

@@ -1,11 +1,22 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API для управления продуктами, категориями и пользователями.",
-        "title": "Sports Nutrition API",
-        "contact": {},
+        "description": "API для интернет-магазина спортивного питания. Содержит функционал для управления пользователями, продуктами, заказами и отзывами.",
+        "title": "Sports Nutrition Store API",
+        "termsOfService": "http://example.com/terms/",
+        "contact": {
+            "name": "Support Team",
+            "url": "http://example.com/support",
+            "email": "support@example.com"
+        },
+        "license": {
+            "name": "MIT License",
+            "url": "https://opensource.org/licenses/MIT"
+        },
         "version": "1.0"
     },
+    "host": "localhost:8080",
+    "basePath": "/",
     "paths": {
         "/admin/orders": {
             "get": {
@@ -2083,6 +2094,9 @@
         "models.Category": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -2280,9 +2294,6 @@
                 "id": {
                     "type": "integer"
                 },
-                "product": {
-                    "$ref": "#/definitions/models.Product"
-                },
                 "product_id": {
                     "type": "integer"
                 },
@@ -2291,9 +2302,6 @@
                 },
                 "review_text": {
                     "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.User"
                 },
                 "user_id": {
                     "type": "integer"
@@ -2371,5 +2379,27 @@
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "description": "Регистрация и авторизация",
+            "name": "auth"
+        },
+        {
+            "description": "Операции, связанные с пользователями",
+            "name": "users"
+        },
+        {
+            "description": "Управление продуктами и отзывами",
+            "name": "products"
+        },
+        {
+            "description": "Работа с заказами пользователей",
+            "name": "orders"
+        },
+        {
+            "description": "Управление категориями",
+            "name": "categories"
+        }
+    ]
 }

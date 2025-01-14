@@ -1,6 +1,9 @@
+basePath: /
 definitions:
   models.Category:
     properties:
+      description:
+        type: string
       id:
         type: integer
       name:
@@ -129,16 +132,12 @@ definitions:
     properties:
       id:
         type: integer
-      product:
-        $ref: '#/definitions/models.Product'
       product_id:
         type: integer
       rating:
         type: integer
       review_text:
         type: string
-      user:
-        $ref: '#/definitions/models.User'
       user_id:
         type: integer
     type: object
@@ -187,10 +186,19 @@ definitions:
       role:
         type: string
     type: object
+host: localhost:8080
 info:
-  contact: {}
-  description: API для управления продуктами, категориями и пользователями.
-  title: Sports Nutrition API
+  contact:
+    email: support@example.com
+    name: Support Team
+    url: http://example.com/support
+  description: API для интернет-магазина спортивного питания. Содержит функционал
+    для управления пользователями, продуктами, заказами и отзывами.
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://example.com/terms/
+  title: Sports Nutrition Store API
   version: "1.0"
 paths:
   /admin/orders:
@@ -1584,3 +1592,14 @@ paths:
       tags:
       - users
 swagger: "2.0"
+tags:
+- description: Регистрация и авторизация
+  name: auth
+- description: Операции, связанные с пользователями
+  name: users
+- description: Управление продуктами и отзывами
+  name: products
+- description: Работа с заказами пользователей
+  name: orders
+- description: Управление категориями
+  name: categories

@@ -9,7 +9,16 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "termsOfService": "http://example.com/terms/",
+        "contact": {
+            "name": "Support Team",
+            "url": "http://example.com/support",
+            "email": "support@example.com"
+        },
+        "license": {
+            "name": "MIT License",
+            "url": "https://opensource.org/licenses/MIT"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -2091,6 +2100,9 @@ const docTemplate = `{
         "models.Category": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -2288,9 +2300,6 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "product": {
-                    "$ref": "#/definitions/models.Product"
-                },
                 "product_id": {
                     "type": "integer"
                 },
@@ -2299,9 +2308,6 @@ const docTemplate = `{
                 },
                 "review_text": {
                     "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.User"
                 },
                 "user_id": {
                     "type": "integer"
@@ -2379,17 +2385,39 @@ const docTemplate = `{
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "description": "Регистрация и авторизация",
+            "name": "auth"
+        },
+        {
+            "description": "Операции, связанные с пользователями",
+            "name": "users"
+        },
+        {
+            "description": "Управление продуктами и отзывами",
+            "name": "products"
+        },
+        {
+            "description": "Работа с заказами пользователей",
+            "name": "orders"
+        },
+        {
+            "description": "Управление категориями",
+            "name": "categories"
+        }
+    ]
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "",
-	BasePath:         "",
+	Host:             "localhost:8080",
+	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Sports Nutrition API",
-	Description:      "API для управления продуктами, категориями и пользователями.",
+	Title:            "Sports Nutrition Store API",
+	Description:      "API для интернет-магазина спортивного питания. Содержит функционал для управления пользователями, продуктами, заказами и отзывами.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
