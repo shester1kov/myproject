@@ -76,3 +76,63 @@ func GetAllOrders(c *gin.Context) {
 		Limit: limitInt,
 	})
 }
+
+// DeleteOrderAdmin godoc
+// @Summary Удаление заказа
+// @Description Удаляет указанный заказ вместе с привязанными продуктами.
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Токен пользователя"
+// @Param id path int true "ID заказа"
+// @Success 200 {object} models.MessageResponse "Успешное удаление заказа"
+// @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
+// @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
+// @Failure 404 {object} models.ErrorResponse "Заказ не найден"
+// @Failure 500 {object} models.ErrorResponse "Ошибка на сервере"
+// @Router admin/orders/{id} [delete]
+func DeleteOrderAdmin(c *gin.Context) {
+	orderIDParam := c.Param("id")
+	orderID, err := strconv.Atoi(orderIDParam)
+	if err != nil {
+		utils.HandleError(c, http.StatusBadRequest, "Invalid order ID")
+		return
+	}
+
+	var order models.Order
+	if err := services.DB.Where("id = ?", orderID).First(&order).Error; err != nil {
+
+		utils.HandleError(c, http.StatusNotFound, "Order not found")
+		return
+	}
+
+	tx := services.DB.Begin()
+
+	if tx.Error != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error starting transaction")
+		return
+	}
+
+	// Удаление всех связанных продуктов
+	if err := tx.Where("order_id = ?", order.ID).Delete(&models.OrderProduct{}).Error; err != nil {
+		tx.Rollback()
+		utils.HandleError(c, http.StatusInternalServerError, "Error deleting order products")
+		return
+	}
+
+	// Удаление самого заказа
+	if err := services.DB.Delete(&order).Error; err != nil {
+		tx.Rollback()
+		utils.HandleError(c, http.StatusInternalServerError, "Error deleting order")
+		return
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error committing transaction")
+		return
+	}
+
+	c.JSON(http.StatusOK, models.MessageResponse{
+		Message: "Order deleted successfully",
+	})
+}

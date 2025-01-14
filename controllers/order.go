@@ -88,7 +88,7 @@ func CreateOrder(c *gin.Context) {
 	}
 
 	if err := tx.Commit().Error; err != nil {
-		utils.HandleError(c, http.StatusInternalServerError, "Error committing transaction") //?
+		utils.HandleError(c, http.StatusInternalServerError, "Error committing transaction")
 		return
 	}
 
@@ -413,15 +413,29 @@ func DeleteOrder(c *gin.Context) {
 		return
 	}
 
+	tx := services.DB.Begin()
+
+	if tx.Error != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error starting transaction")
+		return
+	}
+
 	// Удаление всех связанных продуктов
-	if err := services.DB.Where("order_id = ?", order.ID).Delete(&models.OrderProduct{}).Error; err != nil {
+	if err := tx.Where("order_id = ?", order.ID).Delete(&models.OrderProduct{}).Error; err != nil {
+		tx.Rollback()
 		utils.HandleError(c, http.StatusInternalServerError, "Error deleting order products")
 		return
 	}
 
 	// Удаление самого заказа
-	if err := services.DB.Delete(&order).Error; err != nil {
+	if err := tx.Delete(&order).Error; err != nil {
+		tx.Rollback()
 		utils.HandleError(c, http.StatusInternalServerError, "Error deleting order")
+		return
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error committing transaction")
 		return
 	}
 
