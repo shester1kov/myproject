@@ -21,7 +21,8 @@ import (
 // @Param limit query int false "Количество элементов на странице" default(10)
 // @Param sort query string false "Поле для сортировки" default(id)
 // @Param order query string false "Направление сортировки" default(asc)
-// @Param user_id query string false "ID пользователя" 
+// @Param user_id query string false "ID пользователя"
+// @Param order_id query stringf false "ID заказа"
 // @Success 200 {array} models.OrderResponse "Список заказов с продуктами"
 // @Failuer 400 {object} models.ErrorResponse "Некорректные данные"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
@@ -35,6 +36,7 @@ func GetAllOrders(c *gin.Context) {
 	sort := c.DefaultQuery("sort", "id")
 	order := c.DefaultQuery("order", "asc")
 	user_id := c.Query("user_id")
+	order_id := c.Query("order_id")
 
 	pageInt, err := strconv.Atoi(page)
 	if err != nil {
@@ -51,16 +53,16 @@ func GetAllOrders(c *gin.Context) {
 	if user_id != "" {
 		query = query.Where("user_id = ?", user_id)
 	}
+	if order_id != "" {
+		query = query.Where("id = ?", order_id)
+	}
 
 	query.Count(&total)
 
 	if order != "asc" && order != "desc" {
-		order = "asc" 
+		order = "asc"
 	}
 	query = query.Order(sort + " " + order).Limit(limitInt).Offset(offset)
-
-
-
 
 	if err := query.Preload("Products.Product").Find(&orders).Error; err != nil {
 		utils.HandleError(c, http.StatusInternalServerError, "Error fetching orders")
@@ -68,9 +70,9 @@ func GetAllOrders(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, models.OrderResponse{
-		Data: orders,
+		Data:  orders,
 		Total: total,
-		Page: pageInt,
+		Page:  pageInt,
 		Limit: limitInt,
 	})
 }
