@@ -1017,6 +1017,11 @@ paths:
     get:
       description: Get all reviews for a specific product
       parameters:
+      - description: JWT токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Product ID
         in: path
         name: id
@@ -1026,11 +1031,9 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              items:
-                $ref: '#/definitions/models.Review'
-              type: array
-            type: object
+            items:
+              $ref: '#/definitions/models.Review'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -1041,7 +1044,7 @@ paths:
             $ref: '#/definitions/models.MessageResponse'
       summary: Get product reviews
       tags:
-      - Reviews
+      - products
     post:
       consumes:
       - application/json

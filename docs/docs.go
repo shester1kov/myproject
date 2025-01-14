@@ -1393,10 +1393,17 @@ const docTemplate = `{
             "get": {
                 "description": "Get all reviews for a specific product",
                 "tags": [
-                    "Reviews"
+                    "products"
                 ],
                 "summary": "Get product reviews",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWT токен пользователя",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Product ID",
@@ -1409,12 +1416,9 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/models.Review"
-                                }
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Review"
                             }
                         }
                     },

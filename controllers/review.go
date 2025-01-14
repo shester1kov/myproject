@@ -114,9 +114,10 @@ func CreateReview(c *gin.Context) {
 
 // @Summary Get product reviews
 // @Description Get all reviews for a specific product
-// @Tags Reviews
+// @Tags products
+// @Param Authorization header string true "JWT токен пользователя"
 // @Param id path int true "Product ID"
-// @Success 200 {object} map[string][]models.Review
+// @Success 200 {object} []models.Review
 // @Failure 400 {object} models.MessageResponse
 // @Failure 500 {object} models.MessageResponse
 // @Router /products/{id}/reviews [get]
