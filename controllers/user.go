@@ -327,12 +327,36 @@ func DeleteSelf(c *gin.Context) {
 		return
 	}
 
+	tx := services.DB.Begin()
+
+	if tx.Error != nil {
+		log.Println("Error starting transaction:", tx.Error)
+		utils.HandleError(c, http.StatusInternalServerError, "Failed to start transaction")
+		return
+	}
+
+	if err := tx.Where("order_id IN (SELECT id FROM orders WHERE user_id = ?)", userID).Delete(&models.OrderProduct{}).Error; err != nil {
+		tx.Rollback()
+		utils.HandleError(c, http.StatusInternalServerError, "Internal server error")
+		return
+	}
+
+	if err := tx.Where("user_id = ?", userID).Delete(&models.Order{}).Error; err != nil {
+		tx.Rollback()
+		utils.HandleError(c, http.StatusInternalServerError, "Internal sever error")
+		return
+	}
+
 	// Удаление пользователя
-	if err := services.DB.Delete(&user).Error; err != nil {
+	if err := tx.Delete(&user).Error; err != nil {
 		utils.HandleError(c, http.StatusInternalServerError, "Error deleting user")
 		return
 	}
 
+	if err := tx.Commit().Error; err != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error deleting user and related data")
+		return
+	}
 	c.JSON(http.StatusOK, models.MessageResponse{
 		Message: "Your account has been deleted successfully",
 	})
