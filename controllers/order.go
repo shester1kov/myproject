@@ -184,37 +184,35 @@ func GetOrderByID(c *gin.Context) {
 // @Failure 500 {object} models.ErrorResponse "Ошибка на сервере"
 // @Router /orders/{id}/products [post]
 func AddProductToOrder(c *gin.Context) {
-    orderIDParam := c.Param("id")
+	orderIDParam := c.Param("id")
 	orderID, err := strconv.Atoi(orderIDParam)
 	if err != nil {
 		utils.HandleError(c, http.StatusBadRequest, "Invalid order ID")
 		return
 	}
 
-    var request models.ProductInOrder
-    if err := c.ShouldBindJSON(&request); err != nil {
-        utils.HandleError(c, http.StatusBadRequest, "Invalid request data")
-        return
-    }
+	var request models.ProductInOrder
+	if err := c.ShouldBindJSON(&request); err != nil {
+		utils.HandleError(c, http.StatusBadRequest, "Invalid request data")
+		return
+	}
 
 	if request.Quantity < 1 {
 		utils.HandleError(c, http.StatusBadRequest, "Quantity must be greater then zero")
 		return
 	}
 
-    // Получаем user_id из контекста
-    userID, exists := c.Get("user_id")
-    if !exists {
-        utils.HandleError(c, http.StatusUnauthorized, "Unauthorized")
-        return
-    }
+	userID, exists := c.Get("user_id")
+	if !exists {
+		utils.HandleError(c, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
 
-    // Проверяем, принадлежит ли заказ пользователю
-    var order models.Order
-    if err := services.DB.Where("id = ? AND user_id = ?", orderID, userID).First(&order).Error; err != nil {
-        utils.HandleError(c, http.StatusNotFound, "Order not found")
-        return
-    }
+	var order models.Order
+	if err := services.DB.Where("id = ? AND user_id = ?", orderID, userID).First(&order).Error; err != nil {
+		utils.HandleError(c, http.StatusNotFound, "Order not found")
+		return
+	}
 
 	var orderProduct models.OrderProduct
 	if err := services.DB.Where("order_id = ? AND product_id = ?", order.ID, request.ProductID).First(&orderProduct).Error; err == nil {
@@ -231,17 +229,17 @@ func AddProductToOrder(c *gin.Context) {
 		return
 	}
 
-    // Создаем новый OrderProduct
-    orderProduct = models.OrderProduct{
-        OrderID:   order.ID,
-        ProductID: request.ProductID,
-        Quantity:  request.Quantity,
-    }
+	// Создаем новый OrderProduct
+	orderProduct = models.OrderProduct{
+		OrderID:   order.ID,
+		ProductID: request.ProductID,
+		Quantity:  request.Quantity,
+	}
 
-    if err := services.DB.Create(&orderProduct).Error; err != nil {
-        utils.HandleError(c, http.StatusInternalServerError, "Error adding product to order")
-        return
-    }
+	if err := services.DB.Create(&orderProduct).Error; err != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error adding product to order")
+		return
+	}
 
 	c.JSON(http.StatusOK, models.MessageResponse{
 		Message: "Product added to order",
