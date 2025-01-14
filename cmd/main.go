@@ -1,13 +1,13 @@
 package main
 
 import (
-	_ "project/docs"
 	"project/controllers"
+	_ "project/docs"
 	"project/middlewares"
 	"project/services"
 
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // @title Sports Nutrition API
@@ -29,7 +29,7 @@ func main() {
 		protected.GET("/products/count-by-manufacturer", controllers.CountProductsByManufacturer)
 		protected.GET("/products/price-range", controllers.GetProductsByPriceRange)
 		protected.PUT("/products/manufacturer", middlewares.RoleMiddleware("admin"), controllers.UpdateProductsManufacturer)
-		
+
 		protected.GET("/products", controllers.GetProductsWithTimeout)
 		protected.GET("/products/:id", controllers.GetProductByID)
 		protected.POST("/products", middlewares.RoleMiddleware("admin"), controllers.CreateProduct)
@@ -51,6 +51,7 @@ func main() {
 		protected.DELETE("/orders/:id/products/:product_id", controllers.DeleteProductFromOrder)
 		protected.DELETE("/orders/:id", controllers.DeleteOrder)
 		protected.GET("/admin/orders", middlewares.RoleMiddleware("admin"), controllers.GetAllOrders)
+		protected.DELETE("/admin/orders/:id", middlewares.RoleMiddleware("admin"), controllers.DeleteOrderAdmin)
 
 		protected.GET("users/me", controllers.GetUserInfo)
 		protected.DELETE("users/me", controllers.DeleteSelf)
