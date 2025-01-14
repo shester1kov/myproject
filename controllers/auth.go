@@ -87,11 +87,13 @@ func Register(c *gin.Context) {
 	var existingUser models.User
 	if err := services.DB.Where("username = ?", creds.Username).First(&existingUser).Error; err == nil {
 		utils.HandleError(c, http.StatusConflict, "user already exists")
+		return
 	}
 
 	hashedPassword, err := utils.HashPassword(creds.Password)
 	if err != nil {
 		utils.HandleError(c, http.StatusInternalServerError, "failed to register user")
+		return
 	}
 
 	// Регистрируем пользователя
