@@ -74,13 +74,34 @@ func CreateOrder(c *gin.Context) {
 				return
 			}
 
-			orderProduct := models.OrderProduct{
+			var orderProduct models.OrderProduct
+			if err := tx.Where("order_id = ? AND product_id = ?", order.ID, p.ProductID).First(&orderProduct).Error; err == nil {
+				// Если продукт найден, обновляем его количество
+				orderProduct.Quantity += p.Quantity
+				if err := services.DB.Save(&orderProduct).Error; err != nil {
+					tx.Rollback()
+					utils.HandleError(c, http.StatusInternalServerError, "Error updating product quantity")
+					return
+				}
+
+				if err := tx.Commit().Error; err != nil {
+					utils.HandleError(c, http.StatusInternalServerError, "Internal server error")
+				}
+
+				c.JSON(http.StatusOK, models.MessageResponse{
+					Message: "Product quantity updated",
+				})
+				return
+			}
+
+			orderProduct = models.OrderProduct{
 				OrderID:   order.ID,
 				ProductID: p.ProductID,
 				Quantity:  p.Quantity,
 			}
 
 			if err := tx.Create(&orderProduct).Error; err != nil {
+				tx.Rollback()
 				utils.HandleError(c, http.StatusInternalServerError, "Error creating order product")
 				return
 			}
