@@ -83,6 +83,11 @@ func UpdateUserName(c *gin.Context) {
 		return
 	}
 
+	if len(request.Username) < 2 {
+		utils.HandleError(c, http.StatusBadRequest, "Username length is less then 2")
+		return
+	}
+
 	user.Username = request.Username
 	if err := services.DB.Save(&user).Error; err != nil {
 		utils.HandleError(c, http.StatusInternalServerError, "Error updating user name")
@@ -130,6 +135,11 @@ func UpdateUserPassword(c *gin.Context) {
 
 	if !utils.CheckPassword(user.Password, request.OldPassword) {
 		utils.HandleError(c, http.StatusUnauthorized, "Old password is incorrect")
+		return
+	}
+
+	if len(request.NewPassword) < 6 {
+		utils.HandleError(c, http.StatusBadRequest, "Password length is less than 6")
 		return
 	}
 
@@ -225,35 +235,35 @@ func UpdateUserRole(c *gin.Context) {
 // @Security BearerAuth
 // @Router /users/{id} [delete]
 func DeleteUser(c *gin.Context) {
-    userIDParam := c.Param("id")
-    userID, err := strconv.Atoi(userIDParam)
-    if err != nil {
-        utils.HandleError(c, http.StatusBadRequest, "Invalid user ID")
-        return
-    }
+	userIDParam := c.Param("id")
+	userID, err := strconv.Atoi(userIDParam)
+	if err != nil {
+		utils.HandleError(c, http.StatusBadRequest, "Invalid user ID")
+		return
+	}
 
-    // Проверка существования пользователя
-    var user models.User
-    if err := services.DB.Where("id = ?", userID).First(&user).Error; err != nil {
-        utils.HandleError(c, http.StatusNotFound, "User not found")
-        return
-    }
+	// Проверка существования пользователя
+	var user models.User
+	if err := services.DB.Where("id = ?", userID).First(&user).Error; err != nil {
+		utils.HandleError(c, http.StatusNotFound, "User not found")
+		return
+	}
 
-    // Ограничение удаления только для пользователей с ролью "user"
-    if user.Role != "user" {
-        utils.HandleError(c, http.StatusBadRequest, "Only users with role 'user' can be deleted")
-        return
-    }
+	// Ограничение удаления только для пользователей с ролью "user"
+	if user.Role != "user" {
+		utils.HandleError(c, http.StatusBadRequest, "Only users with role 'user' can be deleted")
+		return
+	}
 
-    // Удаление пользователя
-    if err := services.DB.Delete(&user).Error; err != nil {
-        utils.HandleError(c, http.StatusInternalServerError, "Error deleting user")
-        return
-    }
+	// Удаление пользователя
+	if err := services.DB.Delete(&user).Error; err != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error deleting user")
+		return
+	}
 
-    c.JSON(http.StatusOK, models.MessageResponse{
-        Message: "User deleted successfully",
-    })
+	c.JSON(http.StatusOK, models.MessageResponse{
+		Message: "User deleted successfully",
+	})
 }
 
 // DeleteSelf godoc
@@ -271,35 +281,35 @@ func DeleteUser(c *gin.Context) {
 // @Security BearerAuth
 // @Router /users/me [delete]
 func DeleteSelf(c *gin.Context) {
-    // Получение идентификатора пользователя из контекста
-    userID, exists := c.Get("user_id")
-    if !exists {
-        utils.HandleError(c, http.StatusUnauthorized, "Unauthorized")
-        return
-    }
+	// Получение идентификатора пользователя из контекста
+	userID, exists := c.Get("user_id")
+	if !exists {
+		utils.HandleError(c, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
 
-    // Проверяем, существует ли пользователь
-    var user models.User
-    if err := services.DB.Where("id = ?", userID).First(&user).Error; err != nil {
-        utils.HandleError(c, http.StatusNotFound, "User not found")
-        return
-    }
+	// Проверяем, существует ли пользователь
+	var user models.User
+	if err := services.DB.Where("id = ?", userID).First(&user).Error; err != nil {
+		utils.HandleError(c, http.StatusNotFound, "User not found")
+		return
+	}
 
-    // Администратор не может удалить себя
-    if user.Role == "admin" {
-        utils.HandleError(c, http.StatusForbidden, "Administrators cannot delete themselves")
-        return
-    }
+	// Администратор не может удалить себя
+	if user.Role == "admin" {
+		utils.HandleError(c, http.StatusForbidden, "Administrators cannot delete themselves")
+		return
+	}
 
-    // Удаление пользователя
-    if err := services.DB.Delete(&user).Error; err != nil {
-        utils.HandleError(c, http.StatusInternalServerError, "Error deleting user")
-        return
-    }
+	// Удаление пользователя
+	if err := services.DB.Delete(&user).Error; err != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error deleting user")
+		return
+	}
 
-    c.JSON(http.StatusOK, models.MessageResponse{
-        Message: "Your account has been deleted successfully",
-    })
+	c.JSON(http.StatusOK, models.MessageResponse{
+		Message: "Your account has been deleted successfully",
+	})
 }
 
 // GetAllUsers godoc
@@ -314,19 +324,19 @@ func DeleteSelf(c *gin.Context) {
 // @Security BearerAuth
 // @Router /users [get]
 func GetAllUsers(c *gin.Context) {
-    var users []models.User
+	var users []models.User
 
-    if err := services.DB.Find(&users).Error; err != nil {
-        utils.HandleError(c, http.StatusInternalServerError, "Error retrieving users")
-        return
-    }
+	if err := services.DB.Find(&users).Error; err != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error retrieving users")
+		return
+	}
 
-    // Исключаем пароли из возвращаемых данных
-    for i := range users {
-        users[i].Password = ""
-    }
+	// Исключаем пароли из возвращаемых данных
+	for i := range users {
+		users[i].Password = ""
+	}
 
-    c.JSON(http.StatusOK, users)
+	c.JSON(http.StatusOK, users)
 }
 
 // GetUserByID godoc
@@ -344,21 +354,21 @@ func GetAllUsers(c *gin.Context) {
 // @Security BearerAuth
 // @Router /users/{id} [get]
 func GetUserByID(c *gin.Context) {
-    userIDParam := c.Param("id")
-    userID, err := strconv.Atoi(userIDParam)
-    if err != nil {
-        utils.HandleError(c, http.StatusBadRequest, "Invalid user ID")
-        return
-    }
+	userIDParam := c.Param("id")
+	userID, err := strconv.Atoi(userIDParam)
+	if err != nil {
+		utils.HandleError(c, http.StatusBadRequest, "Invalid user ID")
+		return
+	}
 
-    var user models.User
-    if err := services.DB.Where("id = ?", userID).First(&user).Error; err != nil {
-        utils.HandleError(c, http.StatusNotFound, "User not found")
-        return
-    }
+	var user models.User
+	if err := services.DB.Where("id = ?", userID).First(&user).Error; err != nil {
+		utils.HandleError(c, http.StatusNotFound, "User not found")
+		return
+	}
 
-    // Исключаем пароль из возвращаемых данных
-    user.Password = ""
+	// Исключаем пароль из возвращаемых данных
+	user.Password = ""
 
-    c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, user)
 }

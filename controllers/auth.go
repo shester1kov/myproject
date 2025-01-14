@@ -74,6 +74,16 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	if len(creds.Username) < 2 {
+		utils.HandleError(c, http.StatusBadRequest, "Username length is less than 2")
+		return
+	}
+
+	if len(creds.Password) < 6 {
+		utils.HandleError(c, http.StatusBadRequest, "Password length is less than 6")
+		return
+	}
+
 	var existingUser models.User
 	if err := services.DB.Where("username = ?", creds.Username).First(&existingUser).Error; err == nil {
 		utils.HandleError(c, http.StatusConflict, "user already exists")
