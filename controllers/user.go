@@ -21,6 +21,7 @@ import (
 // @Success 200 {object} models.UserInfoResponse "Успешный запрос. Информация о пользователе"
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Пользователь не найден"
+// @Security BearerAuth
 // @Router /users/me [get]
 func GetUserInfo(c *gin.Context) {
 	userID, exists := c.Get("user_id")
@@ -49,7 +50,7 @@ func GetUserInfo(c *gin.Context) {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен авторизации"
+// @Param Authorization header string false "Токен авторизации"
 // @Param request body models.UpdateUsernameRequest true "Данные для обновления имени пользователя"
 // @Success 200 {object} models.MessageResponse "Имя пользователя успешно обновлено"
 // @Failure 400 {object} models.ErrorResponse "Некорректные данные запроса"
@@ -57,6 +58,7 @@ func GetUserInfo(c *gin.Context) {
 // @Failure 404 {object} models.ErrorResponse "Пользователь не найден"
 // @Failure 409 {object} models.ErrorResponse "Имя пользователя уже занято"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /users/me/username [patch]
 func UpdateUserName(c *gin.Context) {
 	var request models.UpdateUsernameRequest
@@ -106,13 +108,14 @@ func UpdateUserName(c *gin.Context) {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен авторизации"
+// @Param Authorization header string false "Токен авторизации"
 // @Param request body models.UpdatePasswordRequest true "Данные для обновления пароля"
 // @Success 200 {object} models.MessageResponse "Пароль успешно обновлен"
 // @Failure 400 {object} models.ErrorResponse "Некорректные данные запроса"
 // @Failure 401 {object} models.ErrorResponse "Пользователь не авторизован или старый пароль указан неверно"
 // @Failure 404 {object} models.ErrorResponse "Пользователь не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /users/me/password [patch]
 func UpdateUserPassword(c *gin.Context) {
 	var request models.UpdatePasswordRequest
@@ -167,7 +170,7 @@ func UpdateUserPassword(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Param Authorization header string true "Токен авторизации"
+// @Param Authorization header string false "Токен авторизации"
 // @Param id path int true "ID пользователя"
 // @Param data body models.UpdateUserRoleRequest true "Данные для обновления роли"
 // @Success 200 {object} models.MessageResponse "Роль пользователя обновлена на администратора"
@@ -227,7 +230,7 @@ func UpdateUserRole(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Param Authorization header string true "Токен авторизации"
+// @Param Authorization header string false "Токен авторизации"
 // @Param id path int true "ID пользователя"
 // @Success 200 {object} models.MessageResponse "Пользователь успешно удален"
 // @Failure 400 {object} models.ErrorResponse "Некорректные данные запроса или удаление невозможно"
@@ -298,7 +301,7 @@ func DeleteUser(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Param Authorization header string true "Токен авторизации"
+// @Param Authorization header string false "Токен авторизации"
 // @Success 200 {object} models.MessageResponse "Учетная запись успешно удалена"
 // @Failure 401 {object} models.ErrorResponse "Пользователь не авторизован"
 // @Failure 403 {object} models.ErrorResponse "Администратор не может удалить себя"
@@ -368,7 +371,7 @@ func DeleteSelf(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Param Authorization header string true "Токен авторизации"
+// @Param Authorization header string false "Токен авторизации"
 // @Success 200 {array} models.User "Список пользователей"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
 // @Security BearerAuth
@@ -395,7 +398,7 @@ func GetAllUsers(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Param Authorization header string true "Токен авторизации"
+// @Param Authorization header string false "Токен авторизации"
 // @Param id path int true "ID пользователя"
 // @Success 200 {object} models.User "Данные пользователя"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"

@@ -16,7 +16,7 @@ import (
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен доступа пользователя (JWT)"
+// @Param Authorization header string false "Токен доступа пользователя (JWT)"
 // @Param page query int false "Номер страницы" default(1)
 // @Param limit query int false "Количество элементов на странице" default(10)
 // @Param sort query string false "Поле для сортировки" default(id)
@@ -26,6 +26,7 @@ import (
 // @Success 200 {array} models.OrderResponse "Список заказов с продуктами"
 // @Failuer 400 {object} models.ErrorResponse "Некорректные данные"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /admin/orders [get]
 func GetAllOrders(c *gin.Context) {
 	var orders []models.Order
@@ -83,13 +84,14 @@ func GetAllOrders(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен пользователя"
+// @Param Authorization header string false "Токен пользователя"
 // @Param id path int true "ID заказа"
 // @Success 200 {object} models.MessageResponse "Успешное удаление заказа"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Заказ не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка на сервере"
+// @Security BearerAuth
 // @Router /admin/orders/{id} [delete]
 func DeleteOrderAdmin(c *gin.Context) {
 	orderIDParam := c.Param("id")

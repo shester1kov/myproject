@@ -210,7 +210,6 @@ paths:
       - description: Токен доступа пользователя (JWT)
         in: header
         name: Authorization
-        required: true
         type: string
       - default: 1
         description: Номер страницы
@@ -253,6 +252,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение списка всех заказов
       tags:
       - orders
@@ -265,7 +266,6 @@ paths:
       - description: Токен пользователя
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID заказа
         in: path
@@ -295,6 +295,8 @@ paths:
           description: Ошибка на сервере
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Удаление заказа
       tags:
       - orders
@@ -308,7 +310,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       produces:
       - application/json
@@ -327,6 +328,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение списка категорий с тайм-аутом
       tags:
       - categories
@@ -338,7 +341,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Данные категории
         in: body
@@ -361,6 +363,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Создание новой категории
       tags:
       - categories
@@ -373,7 +377,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Идентификатор категории
         in: path
@@ -395,6 +398,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Удаление категории
       tags:
       - categories
@@ -406,7 +411,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Идентификатор категории
         in: path
@@ -428,6 +432,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение категории по ID
       tags:
       - categories
@@ -439,7 +445,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Идентификатор категории
         in: path
@@ -471,6 +476,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Обновление категории
       tags:
       - categories
@@ -519,7 +526,6 @@ paths:
       - description: Токен доступа пользователя (JWT)
         in: header
         name: Authorization
-        required: true
         type: string
       produces:
       - application/json
@@ -542,6 +548,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение списка заказов пользователя
       tags:
       - orders
@@ -554,7 +562,6 @@ paths:
       - description: JWT токен пользователя
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Данные для создания заказа
         in: body
@@ -596,7 +603,6 @@ paths:
       - description: Токен пользователя
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID заказа
         in: path
@@ -626,6 +632,8 @@ paths:
           description: Ошибка на сервере
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Удаление заказа
       tags:
       - orders
@@ -638,7 +646,6 @@ paths:
       - description: Токен доступа пользователя (JWT)
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Идентификатор заказа
         in: path
@@ -664,6 +671,8 @@ paths:
           description: Заказ не найден
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение информации о заказе по идентификатору
       tags:
       - orders
@@ -713,6 +722,8 @@ paths:
           description: Ошибка на сервере
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Добавление продукта в заказ
       tags:
       - orders
@@ -725,7 +736,6 @@ paths:
       - description: Токен пользователя
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID заказа
         in: path
@@ -760,6 +770,8 @@ paths:
           description: Ошибка на сервере
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Удаление продукта из заказа
       tags:
       - orders
@@ -771,7 +783,6 @@ paths:
       - description: Токен пользователя
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID заказа
         in: path
@@ -812,6 +823,8 @@ paths:
           description: Ошибка на сервере
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Обновление количества продукта в заказе
       tags:
       - orders
@@ -825,7 +838,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - default: 1
         description: Номер страницы
@@ -878,6 +890,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение списка продуктов с тайм-аутом
       tags:
       - products
@@ -889,7 +903,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Данные продукта
         in: body
@@ -912,6 +925,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Создание нового продукта
       tags:
       - products
@@ -922,7 +937,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID продукта
         in: path
@@ -944,6 +958,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Удаление продукта
       tags:
       - products
@@ -953,7 +969,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID продукта
         in: path
@@ -975,6 +990,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение продукта по ID
       tags:
       - products
@@ -986,7 +1003,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID продукта
         in: path
@@ -1018,6 +1034,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Обновление продукта
       tags:
       - products
@@ -1028,7 +1046,6 @@ paths:
       - description: JWT токен пользователя
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Product ID
         in: path
@@ -1050,7 +1067,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.MessageResponse'
-      summary: Get product reviews
+      security:
+      - BearerAuth: []
+      summary: Получение отзывов продукта
       tags:
       - products
     post:
@@ -1061,7 +1080,6 @@ paths:
       - description: JWT токен пользователя
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID продукта
         in: path
@@ -1108,7 +1126,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       produces:
       - application/json
@@ -1123,6 +1140,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Подсчет количества продуктов по производителям
       tags:
       - products
@@ -1136,7 +1155,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Новое значение для производителя
         in: query
@@ -1158,6 +1176,8 @@ paths:
           description: Ошибка сервера или транзакции
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Массовое обновление производителя продуктов
       tags:
       - products
@@ -1171,7 +1191,6 @@ paths:
       - description: токен
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Минимальная цена
         in: query
@@ -1204,6 +1223,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение продуктов по диапазону цен
       tags:
       - products
@@ -1285,7 +1306,6 @@ paths:
       - description: Токен авторизации
         in: header
         name: Authorization
-        required: true
         type: string
       produces:
       - application/json
@@ -1314,7 +1334,6 @@ paths:
       - description: Токен авторизации
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID пользователя
         in: path
@@ -1353,7 +1372,6 @@ paths:
       - description: Токен авторизации
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID пользователя
         in: path
@@ -1394,7 +1412,6 @@ paths:
       - description: Токен авторизации
         in: header
         name: Authorization
-        required: true
         type: string
       - description: ID пользователя
         in: path
@@ -1441,7 +1458,6 @@ paths:
       - description: Токен авторизации
         in: header
         name: Authorization
-        required: true
         type: string
       produces:
       - application/json
@@ -1497,6 +1513,8 @@ paths:
           description: Пользователь не найден
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Получение информации о пользователе
       tags:
       - users
@@ -1510,7 +1528,6 @@ paths:
       - description: Токен авторизации
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Данные для обновления пароля
         in: body
@@ -1541,6 +1558,8 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Обновление пароля пользователя
       tags:
       - users
@@ -1553,7 +1572,6 @@ paths:
       - description: Токен авторизации
         in: header
         name: Authorization
-        required: true
         type: string
       - description: Данные для обновления имени пользователя
         in: body
@@ -1588,9 +1606,16 @@ paths:
           description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Обновление имени пользователя
       tags:
       - users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
 tags:
 - description: Регистрация и авторизация

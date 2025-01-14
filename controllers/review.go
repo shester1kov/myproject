@@ -17,14 +17,14 @@ import (
 // @Tags products
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "JWT токен пользователя"
+// @Param Authorization header string false "JWT токен пользователя"
 // @Param id path string true "ID продукта"
 // @Param request body models.CreateReviewRequest true "Данные для создания отзыва"
-// @Security BearerAuth
 // @Success 200 {object} models.MessageResponse "Отзыв успешно создан"
 // @Failure 400 {object} models.ErrorResponse "Некорректные данные запроса"
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /products/{id}/reviews [post]
 func CreateReview(c *gin.Context) {
 	productIDParam := c.Param("id")
@@ -112,14 +112,15 @@ func CreateReview(c *gin.Context) {
 	})
 }
 
-// @Summary Get product reviews
+// @Summary Получение отзывов продукта
 // @Description Get all reviews for a specific product
 // @Tags products
-// @Param Authorization header string true "JWT токен пользователя"
+// @Param Authorization header string false "JWT токен пользователя"
 // @Param id path int true "Product ID"
 // @Success 200 {object} []models.Review
 // @Failure 400 {object} models.MessageResponse
 // @Failure 500 {object} models.MessageResponse
+// @Security BearerAuth
 // @Router /products/{id}/reviews [get]
 func GetProductReviews(c *gin.Context) {
 	// Получаем идентификатор товара из параметров запроса

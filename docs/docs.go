@@ -26,6 +26,11 @@ const docTemplate = `{
     "paths": {
         "/admin/orders": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список заказов, включая информацию о продуктах в заказах",
                 "consumes": [
                     "application/json"
@@ -42,8 +47,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен доступа пользователя (JWT)",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -107,6 +111,11 @@ const docTemplate = `{
         },
         "/admin/orders/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет указанный заказ вместе с привязанными продуктами.",
                 "consumes": [
                     "application/json"
@@ -123,8 +132,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен пользователя",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -170,6 +178,11 @@ const docTemplate = `{
         },
         "/categories": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список категорий с предзагрузкой связанных продуктов, ограничивая время выполнения запроса до 2 секунд.",
                 "consumes": [
                     "application/json"
@@ -186,8 +199,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -215,6 +227,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает новую категорию в базе данных на основе переданных данных.",
                 "consumes": [
                     "application/json"
@@ -231,8 +248,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "description": "Данные категории",
@@ -268,6 +284,11 @@ const docTemplate = `{
         },
         "/categories/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает информацию о категории на основе переданного идентификатора.",
                 "consumes": [
                     "application/json"
@@ -284,8 +305,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -317,6 +337,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет категорию с переданными данными на основе ID",
                 "consumes": [
                     "application/json"
@@ -333,8 +358,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -381,6 +405,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет категорию по переданному ID",
                 "consumes": [
                     "application/json"
@@ -397,8 +426,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -484,6 +512,11 @@ const docTemplate = `{
         },
         "/orders": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список заказов, связанных с пользователем, включая информацию о продуктах в заказах",
                 "consumes": [
                     "application/json"
@@ -500,8 +533,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен доступа пользователя (JWT)",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -556,8 +588,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "JWT токен пользователя",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "description": "Данные для создания заказа",
@@ -599,6 +630,11 @@ const docTemplate = `{
         },
         "/orders/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает данные заказа, включая связанные продукты, если заказ принадлежит авторизованному пользователю",
                 "consumes": [
                     "application/json"
@@ -615,8 +651,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен доступа пользователя (JWT)",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -654,6 +689,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет указанный заказ текущего пользователя вместе с привязанными продуктами.",
                 "consumes": [
                     "application/json"
@@ -670,8 +710,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен пользователя",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -717,6 +756,11 @@ const docTemplate = `{
         },
         "/orders/{id}/products": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Добавляет продукт в заказ текущего пользователя. Если продукт уже существует в заказе, его количество увеличивается.",
                 "consumes": [
                     "application/json"
@@ -789,6 +833,11 @@ const docTemplate = `{
         },
         "/orders/{id}/products/{product_id}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет указанный продукт из заказа текущего пользователя.",
                 "consumes": [
                     "application/json"
@@ -805,8 +854,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен пользователя",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -857,6 +905,11 @@ const docTemplate = `{
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет количество указанного продукта в заказе текущего пользователя.",
                 "consumes": [
                     "application/json"
@@ -873,8 +926,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен пользователя",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -936,6 +988,11 @@ const docTemplate = `{
         },
         "/products": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Получает список продуктов с применением фильтров, сортировки и пагинации с тайм-аутом в 2 секунды",
                 "consumes": [
                     "application/json"
@@ -952,8 +1009,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -1030,6 +1086,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает новый продукт с указанными параметрами",
                 "consumes": [
                     "application/json"
@@ -1046,8 +1107,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "description": "Данные продукта",
@@ -1083,6 +1143,11 @@ const docTemplate = `{
         },
         "/products/count-by-manufacturer": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Выполняет агрегацию, подсчитывая количество продуктов, сгруппированных по производителям.",
                 "consumes": [
                     "application/json"
@@ -1099,8 +1164,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -1124,6 +1188,11 @@ const docTemplate = `{
         },
         "/products/manufacturer": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет поле \"manufacturer\" у всех продуктов в базе данных на указанное значение.",
                 "consumes": [
                     "application/json"
@@ -1140,8 +1209,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "string",
@@ -1175,6 +1243,11 @@ const docTemplate = `{
         },
         "/products/price-range": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список продуктов, цены которых находятся в заданном диапазоне",
                 "consumes": [
                     "application/json"
@@ -1191,8 +1264,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "number",
@@ -1242,6 +1314,11 @@ const docTemplate = `{
         },
         "/products/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Получает информацию о продукте по уникальному идентификатору",
                 "produces": [
                     "application/json"
@@ -1255,8 +1332,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "string",
@@ -1288,6 +1364,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет данные продукта по указанному ID",
                 "consumes": [
                     "application/json"
@@ -1304,8 +1385,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -1352,6 +1432,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет продукт по указанному ID",
                 "produces": [
                     "application/json"
@@ -1365,8 +1450,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "токен",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "string",
@@ -1400,18 +1484,22 @@ const docTemplate = `{
         },
         "/products/{id}/reviews": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all reviews for a specific product",
                 "tags": [
                     "products"
                 ],
-                "summary": "Get product reviews",
+                "summary": "Получение отзывов продукта",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "JWT токен пользователя",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -1467,8 +1555,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "JWT токен пользователя",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "string",
@@ -1640,8 +1727,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен авторизации",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -1665,6 +1751,11 @@ const docTemplate = `{
         },
         "/users/me": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Получает информацию о текущем пользователе, включая его имя и роль. Пароль в ответе не передается.",
                 "consumes": [
                     "application/json"
@@ -1728,8 +1819,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен авторизации",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -1768,6 +1858,11 @@ const docTemplate = `{
         },
         "/users/me/password": {
             "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Позволяет авторизованному пользователю изменить свой пароль, требуется указать старый и новый пароли",
                 "consumes": [
                     "application/json"
@@ -1784,8 +1879,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен авторизации",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "description": "Данные для обновления пароля",
@@ -1833,6 +1927,11 @@ const docTemplate = `{
         },
         "/users/me/username": {
             "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Позволяет авторизованному пользователю обновить свое имя",
                 "consumes": [
                     "application/json"
@@ -1849,8 +1948,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен авторизации",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "description": "Данные для обновления имени пользователя",
@@ -1925,8 +2023,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен авторизации",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -1985,8 +2082,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен авторизации",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -2047,8 +2143,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен авторизации",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     },
                     {
                         "type": "integer",
@@ -2384,6 +2479,13 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     },
     "tags": [

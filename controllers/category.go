@@ -17,10 +17,11 @@ import (
 // @Tags categories
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "токен"
+// @Param Authorization header string false "токен"
 // @Success 200 {array} models.Category "Список категорий с предзагруженными продуктами"
 // @Failure 408 {object} models.ErrorResponse "Тайм-аут запроса"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /categories [get]
 func GetCategoriesWithTimeout(c *gin.Context) {
 	// Создаем контекст с тайм-аутом 2 секунды
@@ -46,11 +47,12 @@ func GetCategoriesWithTimeout(c *gin.Context) {
 // @Tags categories
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "токен"
+// @Param Authorization header string false "токен"
 // @Param id path int true "Идентификатор категории"
 // @Success 200 {object} models.Category "Информация о категории"
 // @Failure 404 {object} models.ErrorResponse "Категория не найдена"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /categories/{id} [get]
 func GetCategoryByID(c *gin.Context) {
 	id := c.Param("id")
@@ -68,11 +70,12 @@ func GetCategoryByID(c *gin.Context) {
 // @Tags categories
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "токен"
+// @Param Authorization header string false "токен"
 // @Param category body models.Category true "Данные категории"
 // @Success 201 {object} models.Category "Созданная категория"
 // @Failure 400 {object} models.ErrorResponse "Некорректные данные"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /categories [post]
 func CreateCategory(c *gin.Context) {
 	var newCategory models.Category
@@ -94,13 +97,14 @@ func CreateCategory(c *gin.Context) {
 // @Tags categories
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "токен"
+// @Param Authorization header string false "токен"
 // @Param id path int true "Идентификатор категории"
 // @Param category body models.Category true "Обновленные данные категории"
 // @Success 200 {object} models.Category "Категория успешно обновлена"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 404 {object} models.ErrorResponse "Категория не найдена"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /categories/{id} [put]
 func UpdateCategory(c *gin.Context) {
 	id := c.Param("id")
@@ -132,11 +136,12 @@ func UpdateCategory(c *gin.Context) {
 // @Tags categories
 // @Accept  json
 // @Produce  json
-// @Param Authorization header string true "токен"
+// @Param Authorization header string false "токен"
 // @Param id path int true "Идентификатор категории"
 // @Success 200 {object} models.MessageResponse "Категория успешно удалена"
 // @Failure 404 {object} models.ErrorResponse "Категория не найдена"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /categories/{id} [delete]
 func DeleteCategory(c *gin.Context) {
 	id := c.Param("id")

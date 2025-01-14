@@ -17,13 +17,13 @@ import (
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "JWT токен пользователя"
+// @Param Authorization header string false "JWT токен пользователя"
 // @Param request body models.CreateOrderRequest true "Данные для создания заказа"
-// @Security BearerAuth
 // @Success 200 {object} models.MessageResponse "Заказ успешно создан"
 // @Failure 400 {object} models.ErrorResponse "Некорректные данные запроса или продукт не найден"
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /orders [post]
 func CreateOrder(c *gin.Context) {
 	var request models.CreateOrderRequest
@@ -125,11 +125,12 @@ func CreateOrder(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен доступа пользователя (JWT)"
+// @Param Authorization header string false "Токен доступа пользователя (JWT)"
 // @Success 200 {array} models.Order "Список заказов с продуктами"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /orders [get]
 func GetUserOrders(c *gin.Context) {
 	userID, exists := c.Get("user_id")
@@ -153,12 +154,13 @@ func GetUserOrders(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен доступа пользователя (JWT)"
+// @Param Authorization header string false "Токен доступа пользователя (JWT)"
 // @Param id path int true "Идентификатор заказа"
 // @Success 200 {object} models.Order "Информация о заказе с продуктами"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Заказ не найден"
+// @Security BearerAuth
 // @Router /orders/{id} [get]
 func GetOrderByID(c *gin.Context) {
 	// Получение идентификатора заказа из параметров URL
@@ -203,6 +205,7 @@ func GetOrderByID(c *gin.Context) {
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Заказ не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка на сервере"
+// @Security BearerAuth
 // @Router /orders/{id}/products [post]
 func AddProductToOrder(c *gin.Context) {
 	orderIDParam := c.Param("id")
@@ -273,7 +276,7 @@ func AddProductToOrder(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен пользователя"
+// @Param Authorization header string false "Токен пользователя"
 // @Param id path int true "ID заказа"
 // @Param product_id path int true "ID продукта"
 // @Param quantity body models.UpdateProductQuantityRequest true "Новое количество продукта"
@@ -282,6 +285,7 @@ func AddProductToOrder(c *gin.Context) {
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Продукт или заказ не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка на сервере"
+// @Security BearerAuth
 // @Router /orders/{id}/products/{product_id} [patch]
 func UpdateProductQuantity(c *gin.Context) {
 	orderIDParam := c.Param("id")
@@ -349,7 +353,7 @@ func UpdateProductQuantity(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен пользователя"
+// @Param Authorization header string false "Токен пользователя"
 // @Param id path int true "ID заказа"
 // @Param product_id path int true "ID продукта для удаления"
 // @Success 200 {object} models.MessageResponse "Успешное удаление продукта"
@@ -357,6 +361,7 @@ func UpdateProductQuantity(c *gin.Context) {
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Продукт или заказ не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка на сервере"
+// @Security BearerAuth
 // @Router /orders/{id}/products/{product_id} [delete]
 func DeleteProductFromOrder(c *gin.Context) {
 	orderIDParam := c.Param("id")
@@ -404,13 +409,14 @@ func DeleteProductFromOrder(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Токен пользователя"
+// @Param Authorization header string false "Токен пользователя"
 // @Param id path int true "ID заказа"
 // @Success 200 {object} models.MessageResponse "Успешное удаление заказа"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Заказ не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка на сервере"
+// @Security BearerAuth
 // @Router /orders/{id} [delete]
 func DeleteOrder(c *gin.Context) {
 	orderIDParam := c.Param("id")

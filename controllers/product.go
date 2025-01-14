@@ -19,13 +19,14 @@ import (
 // @Tags products
 // @Accept  json
 // @Produce  json
-// @Param        Authorization header string true "токен"
+// @Param        Authorization header string false "токен"
 // @Param        minPrice query number true "Минимальная цена"
 // @Param        maxPrice query number true "Максимальная цена"
 // @Success 200 {array} models.Product "Список продуктов в заданном диапазоне цен"
 // @Failure 400 {object} models.ErrorResponse "Некорректные значения цен"
 // @Failure 404 {object} models.ErrorResponse "Продукты не найдены в указанном диапазоне"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /products/price-range [get]
 func GetProductsByPriceRange(c *gin.Context) {
 	minPrice, err1 := strconv.ParseFloat(c.Query("minPrice"), 64)
@@ -57,11 +58,12 @@ func GetProductsByPriceRange(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "токен"
+// @Param Authorization header string false "токен"
 // @Param manufacturer query string true "Новое значение для производителя"
 // @Success 200 {object} models.MessageResponse "Успешное обновление"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера или транзакции"
+// @Security BearerAuth
 // @Router /products/manufacturer [put]
 func UpdateProductsManufacturer(c *gin.Context) {
 	manufacturer := c.Query("manufacturer")
@@ -110,9 +112,10 @@ func UpdateProductsManufacturer(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "токен"
+// @Param Authorization header string false "токен"
 // @Success 200 {array} models.CountProdutsResponse "Результаты агрегации с производителями и их количеством"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /products/count-by-manufacturer [get]
 func CountProductsByManufacturer(c *gin.Context) {
 	var result []models.CountProdutsResponse
@@ -130,26 +133,25 @@ func CountProductsByManufacturer(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-
-
 // GetProductsWithTimeout godoc
 // @Summary Получение списка продуктов с тайм-аутом
 // @Description Получает список продуктов с применением фильтров, сортировки и пагинации с тайм-аутом в 2 секунды
 // @Tags products
 // @Accept  json
 // @Produce  json
-// @Param        Authorization header string true "токен"
+// @Param        Authorization header string false "токен"
 // @Param page query int false "Номер страницы" default(1)
 // @Param limit query int false "Количество элементов на странице" default(10)
 // @Param sort query string false "Поле для сортировки" default(id)
 // @Param order query string false "Направление сортировки" default(asc)
-// @Param name query string false "Название продукта" 
-// @Param category_id query string false "ID категории" 
+// @Param name query string false "Название продукта"
+// @Param category_id query string false "ID категории"
 // @Success 200 {object} models.ProductResponse "Успешный запрос"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 404 {object} models.ErrorResponse "Продукты не найдены"
 // @Failure 408 {object} models.ErrorResponse "Тайм-аут запроса"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /products [get]
 func GetProductsWithTimeout(c *gin.Context) {
 	// Создаем контекст с тайм-аутом 2 секунды
@@ -214,11 +216,12 @@ func GetProductsWithTimeout(c *gin.Context) {
 // @Description Получает информацию о продукте по уникальному идентификатору
 // @Tags products
 // @Produce  json
-// @Param        Authorization header string true "токен"
+// @Param        Authorization header string false "токен"
 // @Param        id path string true "ID продукта"
 // @Success 200 {object} models.Product "Успешный запрос"
 // @Failure 404 {object} models.ErrorResponse "Продукт не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /products/{id} [get]
 func GetProductByID(c *gin.Context) {
 	id := c.Param("id")
@@ -237,11 +240,12 @@ func GetProductByID(c *gin.Context) {
 // @Tags products
 // @Accept  json
 // @Produce  json
-// @Param        Authorization header string true "токен"
+// @Param        Authorization header string false "токен"
 // @Param        product body models.Product true "Данные продукта"
 // @Success 201 {object} models.Product "Успешное создание"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /products [post]
 func CreateProduct(c *gin.Context) {
 	var newProduct models.Product
@@ -273,13 +277,14 @@ func CreateProduct(c *gin.Context) {
 // @Tags products
 // @Accept  json
 // @Produce  json
-// @Param        Authorization header string true "токен"
+// @Param        Authorization header string false "токен"
 // @Param        id path int true "ID продукта"
 // @Param        product body models.Product true "Обновленные данные продукта"
 // @Success 200 {object} models.Product "Успешное обновление"
 // @Failure 400 {object} models.ErrorResponse "Некорректный запрос"
 // @Failure 404 {object} models.ErrorResponse "Продукт не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /products/{id} [put]
 func UpdateProduct(c *gin.Context) {
 	id := c.Param("id")
@@ -308,11 +313,12 @@ func UpdateProduct(c *gin.Context) {
 // @Description Удаляет продукт по указанному ID
 // @Tags products
 // @Produce  json
-// @Param        Authorization header string true "токен"
+// @Param        Authorization header string false "токен"
 // @Param        id path string true "ID продукта"
 // @Success 200 {object} models.MessageResponse "Успешное удаление продукта"
 // @Failure 404 {object} models.ErrorResponse "Продукт не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
+// @Security BearerAuth
 // @Router /products/{id} [delete]
 func DeleteProduct(c *gin.Context) {
 	id := c.Param("id")
@@ -325,4 +331,3 @@ func DeleteProduct(c *gin.Context) {
 		Message: "product deleted",
 	})
 }
-

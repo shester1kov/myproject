@@ -24,22 +24,24 @@ import (
 
 // @host      localhost:8080
 // @BasePath  /
-//
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+
 // @tag.name auth
 // @tag.description Регистрация и авторизация
-//
+
 // @tag.name users
 // @tag.description Операции, связанные с пользователями
-//
+
 // @tag.name products
 // @tag.description Управление продуктами и отзывами
-//
+
 // @tag.name orders
 // @tag.description Работа с заказами пользователей
-//
+
 // @tag.name categories
 // @tag.description Управление категориями
-
 func main() {
 	services.InitDB()
 	router := gin.Default()
