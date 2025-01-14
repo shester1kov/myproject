@@ -2068,9 +2068,6 @@ const docTemplate = `{
                         "$ref": "#/definitions/models.OrderProduct"
                     }
                 },
-                "user": {
-                    "$ref": "#/definitions/models.User"
-                },
                 "user_id": {
                     "type": "integer"
                 }

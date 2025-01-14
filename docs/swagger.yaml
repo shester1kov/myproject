@@ -61,8 +61,6 @@ definitions:
         items:
           $ref: '#/definitions/models.OrderProduct'
         type: array
-      user:
-        $ref: '#/definitions/models.User'
       user_id:
         type: integer
     type: object
