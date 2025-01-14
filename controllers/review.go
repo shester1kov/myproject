@@ -111,3 +111,32 @@ func CreateReview(c *gin.Context) {
 		Message: fmt.Sprintf("Review created successfully. Review ID: %d", review.ID),
 	})
 }
+
+// @Summary Get product reviews
+// @Description Get all reviews for a specific product
+// @Tags Reviews
+// @Param id path int true "Product ID"
+// @Success 200 {object} map[string][]models.Review
+// @Failure 400 {object} models.MessageResponse
+// @Failure 500 {object} models.MessageResponse
+// @Router /products/{id}/reviews [get]
+func GetProductReviews(c *gin.Context) {
+	// Получаем идентификатор товара из параметров запроса
+	productIDParam := c.Param("id")
+	productID, err := strconv.Atoi(productIDParam)
+	if err != nil {
+		utils.HandleError(c, http.StatusBadRequest, "Invalid product ID")
+		return
+	}
+
+	// Массив для хранения отзывов
+	var reviews []models.Review
+
+	// Запрашиваем отзывы из базы данных
+	if err := services.DB.Where("product_id = ?", productID).Find(&reviews).Error; err != nil {
+		utils.HandleError(c, http.StatusInternalServerError, "Error fetching reviews")
+		return
+	}
+
+	c.JSON(http.StatusOK, reviews)
+}

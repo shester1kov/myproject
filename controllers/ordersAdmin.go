@@ -22,7 +22,7 @@ import (
 // @Param sort query string false "Поле для сортировки" default(id)
 // @Param order query string false "Направление сортировки" default(asc)
 // @Param user_id query string false "ID пользователя"
-// @Param order_id query stringf false "ID заказа"
+// @Param order_id query string false "ID заказа"
 // @Success 200 {array} models.OrderResponse "Список заказов с продуктами"
 // @Failuer 400 {object} models.ErrorResponse "Некорректные данные"
 // @Failure 500 {object} models.ErrorResponse "Ошибка сервера"
@@ -90,7 +90,7 @@ func GetAllOrders(c *gin.Context) {
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Заказ не найден"
 // @Failure 500 {object} models.ErrorResponse "Ошибка на сервере"
-// @Router admin/orders/{id} [delete]
+// @Router /admin/orders/{id} [delete]
 func DeleteOrderAdmin(c *gin.Context) {
 	orderIDParam := c.Param("id")
 	orderID, err := strconv.Atoi(orderIDParam)

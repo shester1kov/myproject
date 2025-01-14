@@ -125,6 +125,23 @@ definitions:
       total:
         type: integer
     type: object
+  models.Review:
+    properties:
+      id:
+        type: integer
+      product:
+        $ref: '#/definitions/models.Product'
+      product_id:
+        type: integer
+      rating:
+        type: integer
+      review_text:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      user_id:
+        type: integer
+    type: object
   models.TokenResponse:
     properties:
       token:
@@ -211,6 +228,10 @@ paths:
         in: query
         name: user_id
         type: string
+      - description: ID заказа
+        in: query
+        name: order_id
+        type: string
       produces:
       - application/json
       responses:
@@ -225,6 +246,48 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Получение списка всех заказов
+      tags:
+      - orders
+  /admin/orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет указанный заказ вместе с привязанными продуктами.
+      parameters:
+      - description: Токен пользователя
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное удаление заказа
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Неавторизованный доступ
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Заказ не найден
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Ошибка на сервере
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Удаление заказа
       tags:
       - orders
   /categories:
@@ -951,6 +1014,34 @@ paths:
       tags:
       - products
   /products/{id}/reviews:
+    get:
+      description: Get all reviews for a specific product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Review'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+      summary: Get product reviews
+      tags:
+      - Reviews
     post:
       consumes:
       - application/json

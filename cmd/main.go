@@ -36,6 +36,7 @@ func main() {
 		protected.PUT("/products/:id", middlewares.RoleMiddleware("admin"), controllers.UpdateProduct)
 		protected.DELETE("/products/:id", middlewares.RoleMiddleware("admin"), controllers.DeleteProduct)
 		protected.POST("/products/:id/reviews", controllers.CreateReview)
+		router.GET("/products/:id/reviews", controllers.GetProductReviews)
 
 		protected.GET("/categories", controllers.GetCategoriesWithTimeout)
 		protected.GET("/categories/:id", controllers.GetCategoryByID)
