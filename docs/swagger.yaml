@@ -1496,7 +1496,6 @@ paths:
       - description: Токен пользователя
         in: header
         name: Authorization
-        required: true
         type: string
       produces:
       - application/json

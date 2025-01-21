@@ -1772,8 +1772,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Токен пользователя",
                         "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     }
                 ],
                 "responses": {

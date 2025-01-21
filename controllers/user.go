@@ -17,7 +17,7 @@ import (
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Param        Authorization  header  string  true  "Токен пользователя"
+// @Param        Authorization  header  string  false  "Токен пользователя"
 // @Success 200 {object} models.UserInfoResponse "Успешный запрос. Информация о пользователе"
 // @Failure 401 {object} models.ErrorResponse "Неавторизованный доступ"
 // @Failure 404 {object} models.ErrorResponse "Пользователь не найден"
